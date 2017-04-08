@@ -1,10 +1,12 @@
+#include <QWidget>
 #include <QApplication>
 #include <QDebug>
 
 #include <pthread.h>
 #include <wiringPi.h>
 
-#include "window.h"
+#include "sendwindow.h"
+#include "receivewindow.h"
 
 void* worker(void* thread_id)
 {
@@ -25,8 +27,10 @@ int main(int argc, char *argv[])
 
     // setup Qt GUI
     QApplication a(argc, argv);
-    Window w;
-    w.show();
+    SendWindow s;
+    ReceiveWindow r;
+    s.show();
+    r.show();
 
     // starting worker thread(s)
     int rc;

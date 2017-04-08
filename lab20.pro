@@ -13,10 +13,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        window.cpp
+    sendwindow.cpp \
+    receivewindow.cpp
 
-HEADERS  += window.h
+HEADERS  += \
+    sendwindow.h \
+    receivewindow.h
 
-FORMS    += window.ui
+FORMS    +=
 
 LIBS += -L/usr/local/lib -lwiringPi -lpthread
