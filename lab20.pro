@@ -17,6 +17,6 @@ SOURCES += main.cpp\
 
 HEADERS  += window.h
 
-FORMS    +=
+FORMS    += window.ui
 
 LIBS += -L/usr/local/lib -lwiringPi -lpthread
