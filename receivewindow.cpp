@@ -3,7 +3,8 @@
 ReceiveWindow::ReceiveWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    this->resize(400,300);
+    viewer = new Viewer;
+    this->setCentralWidget(viewer);
     this->setWindowTitle("AlMel Receive");
 
 }

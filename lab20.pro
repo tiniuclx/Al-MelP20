@@ -15,12 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
     sendwindow.cpp \
     receivewindow.cpp \
-    canvas.cpp
+    canvas.cpp \
+    viewer.cpp
 
 HEADERS  += \
     sendwindow.h \
     receivewindow.h \
     canvas.h \
+    viewer.h \
     flaggedqpoint.h
 
 FORMS    +=
