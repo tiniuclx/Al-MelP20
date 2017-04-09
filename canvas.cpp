@@ -9,7 +9,7 @@ Canvas::Canvas(QWidget *parent) :
     QWidget(parent)
 {
     this->setMinimumSize(400,300);
-    pointVector = new std::vector<QPoint>;
+    pointVector = new std::vector<FlaggedQPoint>;
 }
 
 void Canvas::paintEvent(QPaintEvent *event){
@@ -21,28 +21,33 @@ void Canvas::paintEvent(QPaintEvent *event){
     painter.setPen(pen);
 
     for(unsigned i=1;i<pointVector->size();i++){
-        QLine line((*pointVector)[i],(*pointVector)[i-1]);
-        painter.drawLine(line);
+        if((*pointVector)[i].isConnected){
+            QLine line((*pointVector)[i],(*pointVector)[i-1]);
+            painter.drawLine(line);
+        }
     }
 }
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event){
     int mouseX = event->x();
     int mouseY = event->y();
-    pointVector->push_back(QPoint(mouseX,mouseY));
+    pointVector->push_back(FlaggedQPoint(mouseX,mouseY));
     update();
 }
 
 void Canvas::mousePressEvent(QMouseEvent *event){
     int mouseX = event->x();
     int mouseY = event->y();
-    pointVector->push_back(QPoint(mouseX,mouseY));
+    FlaggedQPoint p(mouseX,mouseY);
+    p.isConnected = false;
+    pointVector->push_back(p);
     update();
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent *event){
     int mouseX = event->x();
     int mouseY = event->y();
-    pointVector->push_back(QPoint(mouseX,mouseY));
+    pointVector->push_back(FlaggedQPoint(mouseX,mouseY));
     update();
 }
+

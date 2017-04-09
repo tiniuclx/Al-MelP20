@@ -5,6 +5,20 @@
 #include <vector>
 #include <QPoint>
 
+class FlaggedQPoint : public QPoint
+{
+public:
+    bool isConnected;
+    FlaggedQPoint(){
+        isConnected=true;
+    }
+    FlaggedQPoint(int x, int y){
+        isConnected=true;
+        setX(x);
+        setY(y);
+    }
+};
+
 class Canvas : public QWidget
 {
     Q_OBJECT
@@ -16,7 +30,7 @@ protected:
     void mousePressEvent(QMouseEvent * event);
     void mouseMoveEvent(QMouseEvent * event);
 private:
-    std::vector<QPoint> *pointVector;
+    std::vector<FlaggedQPoint> *pointVector;
 
 
 signals:
