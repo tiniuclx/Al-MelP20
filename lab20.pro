@@ -20,7 +20,8 @@ SOURCES += main.cpp\
 HEADERS  += \
     sendwindow.h \
     receivewindow.h \
-    canvas.h
+    canvas.h \
+    flaggedqpoint.h
 
 FORMS    +=
 
