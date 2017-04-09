@@ -14,11 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     sendwindow.cpp \
-    receivewindow.cpp
+    receivewindow.cpp \
+    canvas.cpp
 
 HEADERS  += \
     sendwindow.h \
-    receivewindow.h
+    receivewindow.h \
+    canvas.h
 
 FORMS    +=
 

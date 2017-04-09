@@ -3,6 +3,7 @@
 SendWindow::SendWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    this->resize(400,300);
+    canvas = new Canvas;
+    this->setCentralWidget(this->canvas);
     this->setWindowTitle("AlMel Send");
 }

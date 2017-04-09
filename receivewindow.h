@@ -2,6 +2,7 @@
 #define RECEIVEWINDOW_H
 
 #include <QMainWindow>
+#include "canvas.h"
 
 class ReceiveWindow : public QMainWindow
 {
