@@ -4,7 +4,6 @@
 #include <QMouseEvent>
 #include <QLine>
 
-
 Canvas::Canvas(QWidget *parent) :
     QWidget(parent)
 {
@@ -50,4 +49,3 @@ void Canvas::mouseMoveEvent(QMouseEvent *event){
     pointVector->push_back(FlaggedQPoint(mouseX,mouseY));
     update();
 }
-

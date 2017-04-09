@@ -32,7 +32,6 @@ protected:
 private:
     std::vector<FlaggedQPoint> *pointVector;
 
-
 signals:
 
 public slots:
