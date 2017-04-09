@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     SendWindow s;
     ReceiveWindow r;
+    QObject::connect(s.canvas,&Canvas::flaggedPointDrawn,r.viewer,&Viewer::drawFlaggedPoint);
     s.show();
     r.show();
 

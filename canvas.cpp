@@ -12,7 +12,6 @@ Canvas::Canvas(QWidget *parent) :
 }
 
 void Canvas::paintEvent(QPaintEvent *event){
-
     QPainter painter(this);
     QPen pen(Qt::black);
     pen.setWidth(3);
@@ -30,7 +29,9 @@ void Canvas::paintEvent(QPaintEvent *event){
 void Canvas::mouseReleaseEvent(QMouseEvent *event){
     int mouseX = event->x();
     int mouseY = event->y();
-    pointVector->push_back(FlaggedQPoint(mouseX,mouseY));
+    FlaggedQPoint p(mouseX,mouseY);
+    pointVector->push_back(p);
+    emit flaggedPointDrawn(p);
     update();
 }
 
@@ -40,12 +41,15 @@ void Canvas::mousePressEvent(QMouseEvent *event){
     FlaggedQPoint p(mouseX,mouseY);
     p.isConnected = false;
     pointVector->push_back(p);
+    emit flaggedPointDrawn(p);
     update();
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent *event){
     int mouseX = event->x();
     int mouseY = event->y();
-    pointVector->push_back(FlaggedQPoint(mouseX,mouseY));
+    FlaggedQPoint p(mouseX,mouseY);
+    pointVector->push_back(p);
+    emit flaggedPointDrawn(p);
     update();
 }

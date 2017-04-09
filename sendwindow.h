@@ -9,10 +9,10 @@ class SendWindow : public QMainWindow
     Q_OBJECT
 public:
     SendWindow(QWidget *parent = 0);
+    Canvas *canvas;
 protected:
 
 private:
-    Canvas *canvas;
 signals:
 
 public slots:

@@ -20,7 +20,7 @@ private:
     std::vector<FlaggedQPoint> *pointVector;
 
 signals:
-
+    void flaggedPointDrawn(FlaggedQPoint p);
 public slots:
 
 };
