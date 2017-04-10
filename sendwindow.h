@@ -4,6 +4,13 @@
 #include <QMainWindow>
 #include "canvas.h"
 
+// The SendWindow class represents the UI wrapper around Canvas.
+// It should contain all the necessary functionality to signal
+// drawing tool changes, color changes and other features.
+// The actual drawing is handled by the Canvas class.
+
+// Because SendWindow inherits from QMainWindow, it is easy to
+// add menu bars and toolboxes: see QMainWindow documentation.
 class SendWindow : public QMainWindow
 {
     Q_OBJECT

@@ -7,11 +7,13 @@ Viewer::Viewer(QWidget *parent) :
     pointVector = new std::vector<FlaggedQPoint>;
 }
 
+// Receive a drawn point from Canvas, store it in memory
+// and update the screen
 void Viewer::drawFlaggedPoint(FlaggedQPoint p){
     pointVector->push_back(p);
     update();
 }
-
+// Identical to Canvas::paintEvent
 void Viewer::paintEvent(QPaintEvent *event){
     QPainter painter(this);
     QPen pen(Qt::black);

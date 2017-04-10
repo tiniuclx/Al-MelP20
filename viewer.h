@@ -6,6 +6,8 @@
 #include <QPen>
 #include "flaggedqpoint.h"
 
+// Viewer functionality mirrors canvas functionality almost completely.
+// Consider refactoring the two so they share an ancestor?
 class Viewer : public QWidget
 {
     Q_OBJECT

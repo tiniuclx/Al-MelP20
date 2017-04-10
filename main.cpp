@@ -27,9 +27,16 @@ int main(int argc, char *argv[])
 
     // setup Qt GUI
     QApplication a(argc, argv);
+    // the two windows are initialised in the main loop
     SendWindow s;
     ReceiveWindow r;
-    QObject::connect(s.canvas,&Canvas::flaggedPointDrawn,r.viewer,&Viewer::drawFlaggedPoint);
+    // all the signals connecting the send window and the receive window
+    // also have to be part of main
+    QObject::connect(s.canvas,&Canvas::flaggedPointDrawn,
+                     r.viewer,&Viewer::drawFlaggedPoint);
+    // IDEA: have a CommunicationLinker class which takes pointers to
+    // SendWindow and ReceiveWindow, and then links together the
+    // signals and slots of Canvas and Viewer
     s.show();
     r.show();
 

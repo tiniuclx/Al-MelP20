@@ -6,6 +6,10 @@
 #include <QPoint>
 #include "flaggedqpoint.h"
 
+// The Canvas widged is where the user actually draws their picture.
+// It should contain the code neccessary to draw things, as well as
+// transmit them to an instance of Viewer. The connection between the
+// two will probably be made in the main() loop of the program.
 class Canvas : public QWidget
 {
     Q_OBJECT
@@ -17,6 +21,8 @@ protected:
     void mousePressEvent(QMouseEvent * event);
     void mouseMoveEvent(QMouseEvent * event);
 private:
+    // Vector containing what is currently on-screen. A clearWindow
+    // method would clear the contents of this vector.
     std::vector<FlaggedQPoint> *pointVector;
 
 signals:
