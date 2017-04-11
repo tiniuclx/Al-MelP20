@@ -3,12 +3,14 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QLine>
+#include <QStyleOption>
 
 Canvas::Canvas(QWidget *parent) :
     QWidget(parent)
 {
-    this->setMinimumSize(400,300);
+    this->setMinimumSize(600,400);
     pointVector = new std::vector<FlaggedQPoint>;
+    this->setStyleSheet(tr("background-color:white;"));
 }
 // Paint everything stored in memory whenever update() is called.
 void Canvas::paintEvent(QPaintEvent *event){
@@ -20,6 +22,10 @@ void Canvas::paintEvent(QPaintEvent *event){
     pen.setWidth(3);
     pen.setCapStyle(Qt::RoundCap);
     painter.setPen(pen);
+    // Boilerplate to draw a white background
+    QStyleOption opt;
+    opt.init(this);
+    style()->drawPrimitive(QStyle::PE_Widget,&opt,&painter,this);
     // For every point in pointVector
     for(unsigned i=1;i<pointVector->size();i++){
         if((*pointVector)[i].isConnected){
@@ -69,5 +75,11 @@ void Canvas::mouseMoveEvent(QMouseEvent *event){
     pointVector->push_back(p);
     // Tell an instance of Viewer that a flagged point was drawn
     emit flaggedPointDrawn(p);
+    update();
+}
+
+void Canvas::drawClearedScreen(){
+    pointVector->clear();
+    emit screenCleared();
     update();
 }

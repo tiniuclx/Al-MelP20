@@ -27,7 +27,9 @@ private:
 
 signals:
     void flaggedPointDrawn(FlaggedQPoint p);
+    void screenCleared();
 public slots:
+    void drawClearedScreen();
 
 };
 

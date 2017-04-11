@@ -1,4 +1,6 @@
 #include "sendwindow.h"
+#include <QDebug>
+#include <QAction>
 
 SendWindow::SendWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -9,4 +11,19 @@ SendWindow::SendWindow(QWidget *parent) :
     // terface is built.
     this->setCentralWidget(this->canvas);
     this->setWindowTitle("AlMel Send");
+
+    toolbar = this->addToolBar(tr("Tools"));
+    toolbar->addAction(tr("Clear"));
+
+    connect(toolbar,&QToolBar::actionTriggered,this,&SendWindow::handleToolbar);
+    connect(this,&SendWindow::clearScreen,canvas,&Canvas::drawClearedScreen);
 }
+
+void SendWindow::handleToolbar(QAction* action){
+    if(action->text()==tr("Clear"))
+        emit clearScreen();
+    else
+        qDebug()<<"Unknown action:"<<action->text();
+}
+
+

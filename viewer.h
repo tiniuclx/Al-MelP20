@@ -19,9 +19,9 @@ private:
     std::vector<FlaggedQPoint> *pointVector;
 
 signals:
-
 public slots:
     void drawFlaggedPoint(FlaggedQPoint p);
+    void drawClearedScreen();
 
 };
 

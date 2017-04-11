@@ -1,10 +1,12 @@
 #include "viewer.h"
+#include <QStyleOption>
 
 Viewer::Viewer(QWidget *parent) :
     QWidget(parent)
 {
-    this->setMinimumSize(400,300);
-    pointVector = new std::vector<FlaggedQPoint>;
+    this->setMinimumSize(600,400);
+    pointVector = new std::vector<FlaggedQPoint>;    
+    this->setStyleSheet(tr("background-color:white;"));
 }
 
 // Receive a drawn point from Canvas, store it in memory
@@ -20,6 +22,10 @@ void Viewer::paintEvent(QPaintEvent *event){
     pen.setWidth(3);
     pen.setCapStyle(Qt::RoundCap);
     painter.setPen(pen);
+    // Boilerplate to draw a white background
+    QStyleOption opt;
+    opt.init(this);
+    style()->drawPrimitive(QStyle::PE_Widget,&opt,&painter,this);
 
     for(unsigned i=1;i<pointVector->size();i++){
         if((*pointVector)[i].isConnected){
@@ -27,4 +33,9 @@ void Viewer::paintEvent(QPaintEvent *event){
             painter.drawLine(line);
         }
     }
+}
+
+void Viewer::drawClearedScreen(){
+    pointVector->clear();
+    update();
 }

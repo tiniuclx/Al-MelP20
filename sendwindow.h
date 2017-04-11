@@ -2,6 +2,7 @@
 #define SENDWINDOW_H
 
 #include <QMainWindow>
+#include <QToolBar>
 #include "canvas.h"
 
 // The SendWindow class represents the UI wrapper around Canvas.
@@ -20,9 +21,12 @@ public:
 protected:
 
 private:
+    QToolBar* toolbar;
 signals:
+    void clearScreen();
 
 public slots:
+    void handleToolbar(QAction* action);
 
 };
 

@@ -9,5 +9,4 @@ ReceiveWindow::ReceiveWindow(QWidget *parent) :
     // terface is built.
     this->setCentralWidget(viewer);
     this->setWindowTitle("AlMel Receive");
-
 }

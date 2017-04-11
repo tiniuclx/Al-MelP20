@@ -37,6 +37,9 @@ int main(int argc, char *argv[])
     // IDEA: have a CommunicationLinker class which takes pointers to
     // SendWindow and ReceiveWindow, and then links together the
     // signals and slots of Canvas and Viewer
+
+    QObject::connect(s.canvas,&Canvas::screenCleared,
+                     r.viewer,&Viewer::drawClearedScreen);
     s.show();
     r.show();
 
