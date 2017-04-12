@@ -6,8 +6,8 @@
 #include <QPen>
 #include "flaggedqpoint.h"
 
-// Viewer functionality mirrors canvas functionality almost completely.
-// Consider refactoring the two so they share an ancestor?
+// The Viewer class contains the functionality necessary
+// to display user-drawn schematics
 class Viewer : public QWidget
 {
     Q_OBJECT
@@ -15,10 +15,12 @@ public:
     explicit Viewer(QWidget *parent = 0);
 protected:
     void paintEvent(QPaintEvent * event);
-private:
+    // Vector containing what is currently on-screen.
     std::vector<FlaggedQPoint> *pointVector;
+private:
 
 signals:
+
 public slots:
     void drawFlaggedPoint(FlaggedQPoint p);
     void drawClearedScreen();

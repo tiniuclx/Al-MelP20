@@ -5,49 +5,22 @@
 #include <QLine>
 #include <QStyleOption>
 
+// Inherit the constructor of Viewer
 Canvas::Canvas(QWidget *parent) :
-    QWidget(parent)
+    Viewer(parent)
 {
-    this->setMinimumSize(600,400);
-    pointVector = new std::vector<FlaggedQPoint>;
-    this->setStyleSheet(tr("background-color:white;"));
-}
-// Paint everything stored in memory whenever update() is called.
-void Canvas::paintEvent(QPaintEvent *event){
-    // Properties of the lines being drawn. As of yet hard-
-    // coded, should be easy to extend functionality to change
-    // these parameters.
-    QPainter painter(this);
-    QPen pen(Qt::black);
-    pen.setWidth(3);
-    pen.setCapStyle(Qt::RoundCap);
-    painter.setPen(pen);
-    // Boilerplate to draw a white background
-    QStyleOption opt;
-    opt.init(this);
-    style()->drawPrimitive(QStyle::PE_Widget,&opt,&painter,this);
-    // For every point in pointVector
-    for(unsigned i=1;i<pointVector->size();i++){
-        if((*pointVector)[i].isConnected){
-            // Draw a line between the point and the previous one
-            // if they are meant to be connected.
-            QLine line((*pointVector)[i],(*pointVector)[i-1]);
-            painter.drawLine(line);
-        }
-    }
+    // Deliberately left empty
 }
 
 // Draw a point whenever you release the mouse. Might
 // be superflous
 void Canvas::mouseReleaseEvent(QMouseEvent *event){
-
     int mouseX = event->x();
     int mouseY = event->y();
     FlaggedQPoint p(mouseX,mouseY);
-    pointVector->push_back(p);
     // Tell an instance of Viewer that a flagged point was drawn
     emit flaggedPointDrawn(p);
-    update();
+    this->drawFlaggedPoint(p);
 }
 
 // Draw a point whenever you click the mouse
@@ -58,10 +31,9 @@ void Canvas::mousePressEvent(QMouseEvent *event){
     // After you let go and click again, the drawings,
     // and therefore the points, shouldnt be connected.
     p.isConnected = false;
-    pointVector->push_back(p);
     // Tell an instance of Viewer that a flagged point was drawn
     emit flaggedPointDrawn(p);
-    update();
+    this->drawFlaggedPoint(p);
 }
 
 // Whenever the mouse is moved, draw a point at the cursor
@@ -72,14 +44,14 @@ void Canvas::mouseMoveEvent(QMouseEvent *event){
     int mouseX = event->x();
     int mouseY = event->y();
     FlaggedQPoint p(mouseX,mouseY);
-    pointVector->push_back(p);
     // Tell an instance of Viewer that a flagged point was drawn
     emit flaggedPointDrawn(p);
-    update();
+    this->drawFlaggedPoint(p);
 }
 
+// Clears the screen and signals that the class has been instructed
+// to do so.
 void Canvas::drawClearedScreen(){
-    pointVector->clear();
+    Viewer::drawClearedScreen();
     emit screenCleared();
-    update();
 }
