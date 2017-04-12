@@ -27,13 +27,17 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event){
 void Canvas::mousePressEvent(QMouseEvent *event){
     int mouseX = event->x();
     int mouseY = event->y();
-    FlaggedQPoint p(mouseX,mouseY);
+    FlaggedQPoint p1(mouseX,mouseY);
     // After you let go and click again, the drawings,
     // and therefore the points, shouldnt be connected.
-    p.isConnected = false;
+    p1.isConnected = false;
     // Tell an instance of Viewer that a flagged point was drawn
-    emit flaggedPointDrawn(p);
-    this->drawFlaggedPoint(p);
+    emit flaggedPointDrawn(p1);
+    this->drawFlaggedPoint(p1);
+    // Fixes bug where a click with no movement doesn't draw a point.
+    FlaggedQPoint p2(mouseX+1,mouseY+1);
+    emit flaggedPointDrawn(p2);
+    this->drawFlaggedPoint(p2);
 }
 
 // Whenever the mouse is moved, draw a point at the cursor
