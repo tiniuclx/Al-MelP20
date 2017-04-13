@@ -16,14 +16,18 @@ SOURCES += main.cpp\
     sendwindow.cpp \
     receivewindow.cpp \
     canvas.cpp \
-    viewer.cpp
+    viewer.cpp \
+    serialreceiver.cpp \
+    serialsender.cpp
 
 HEADERS  += \
     sendwindow.h \
     receivewindow.h \
     canvas.h \
     viewer.h \
-    flaggedqpoint.h
+    flaggedqpoint.h \
+    serialreceiver.h \
+    serialsender.h
 
 FORMS    +=
 

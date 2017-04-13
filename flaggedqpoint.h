@@ -1,6 +1,6 @@
 #ifndef FLAGGEDQPOINT_H
 #define FLAGGEDQPOINT_H
-
+#include <QPoint>
 
 class FlaggedQPoint : public QPoint
 {
