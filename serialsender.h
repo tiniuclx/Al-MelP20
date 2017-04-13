@@ -1,11 +1,12 @@
 #ifndef SERIALSENDER_H
 #define SERIALSENDER_H
+#include <QObject>
 
 #include "flaggedqpoint.h"
 #include "canvas.h"
 
 
-class serialsender
+class serialsender : public QObject
 {
 
 Q_OBJECT
