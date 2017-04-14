@@ -13,8 +13,10 @@ Q_OBJECT
 
 public:
     //explicit serialsender(QWidget *parent = 0);
-    serialsender();
+    serialsender(Canvas *targetCanvas);
     Canvas *canvas;
+
+protected:
 
 private:
 

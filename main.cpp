@@ -7,6 +7,7 @@
 
 #include "sendwindow.h"
 #include "receivewindow.h"
+#include "serialsender.h"
 
 void* worker(void* thread_id)
 {
@@ -30,6 +31,11 @@ int main(int argc, char *argv[])
     // the two windows are initialised in the main loop
     SendWindow s;
     ReceiveWindow r;
+
+
+    serialsender sender(s.canvas);
+
+
     // all the signals connecting the send window and the receive window
     // also have to be part of main
     QObject::connect(s.canvas,&Canvas::flaggedPointDrawn,
