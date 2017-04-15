@@ -32,8 +32,8 @@ int main(int argc, char *argv[])
     SendWindow s;
     ReceiveWindow r;
 
-
-    serialsender sender(s.canvas);
+    serialReceiver receiver;
+    serialsender sender(s.canvas, &receiver);
 
 
     // all the signals connecting the send window and the receive window
