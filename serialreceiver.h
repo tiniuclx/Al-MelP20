@@ -2,14 +2,19 @@
 #define SERIALRECEIVER_H
 
 #include <vector>
+#include <QObject>
+#include "flaggedqpoint.h"
+#include "viewer.h"
 
-class serialReceiver
+class SerialReceiver : public QObject
 {
+    Q_OBJECT
 public:
-    serialReceiver();
+    SerialReceiver(Viewer *viewer);
     void decoder(std::vector<bool> message);
-
-private:
+signals:
+    void flaggedPointDrawn(FlaggedQPoint p);
+    void screenCleared();
 
 };
 

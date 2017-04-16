@@ -6,17 +6,17 @@
 const int COORDINATE_BITS = 16;
 
 
-serialsender::serialsender(Canvas *targetCanvas, serialReceiver *targetSerialReceiver)
+SerialSender::SerialSender(Canvas *targetCanvas, SerialReceiver *targetSerialReceiver)
 {
     receiver=targetSerialReceiver;
     canvas=targetCanvas;
-    connect(canvas,&Canvas::flaggedPointDrawn,this,&serialsender::saveFlaggedPoint);
-    connect(canvas,&Canvas::screenCleared,this,&serialsender::clearScreen);
+    connect(canvas,&Canvas::flaggedPointDrawn,this,&SerialSender::saveFlaggedPoint);
+    connect(canvas,&Canvas::screenCleared,this,&SerialSender::clearScreen);
 }
 
 
 // Receive a drawn point, store it in memory
-void serialsender::saveFlaggedPoint(FlaggedQPoint p){
+void SerialSender::saveFlaggedPoint(FlaggedQPoint p){
     qDebug()<<"Sending point:";
     // initialises the vectors with COORDINATE_BITS zeroes
     std::vector<bool>vectx;
@@ -40,7 +40,7 @@ void serialsender::saveFlaggedPoint(FlaggedQPoint p){
 }
 
 // first bit is LSB => stored LSB:MSB
-std::vector<bool>serialsender::decToBin(int decimal){
+std::vector<bool>SerialSender::decToBin(int decimal){
     std::vector<bool>binary;
 
     while(decimal!=0){
@@ -56,7 +56,7 @@ std::vector<bool>serialsender::decToBin(int decimal){
     return binary;
 }
 
-void serialsender::clearScreen(){
+void SerialSender::clearScreen(){
      qDebug()<<"Sending: Clear Screen!";
 
     std::vector<bool>clearInformation;
@@ -70,7 +70,7 @@ void serialsender::clearScreen(){
     sendMessage(clearInformation);
 }
 
-std::vector<bool> serialsender::serialization(bool instruction, bool connected, std::vector<bool> x, std::vector<bool>y){
+std::vector<bool> SerialSender::serialization(bool instruction, bool connected, std::vector<bool> x, std::vector<bool>y){
     std::vector<bool> information;
     //final structure of information vector:
     //information[0]=instruction
@@ -90,6 +90,6 @@ std::vector<bool> serialsender::serialization(bool instruction, bool connected, 
     return information;
 }
 
-void serialsender::sendMessage(std::vector<bool> message){
+void SerialSender::sendMessage(std::vector<bool> message){
     receiver->decoder(message);
 }

@@ -32,20 +32,10 @@ int main(int argc, char *argv[])
     SendWindow s;
     ReceiveWindow r;
 
-    serialReceiver receiver;
-    serialsender sender(s.canvas, &receiver);
+    SerialReceiver receiver(r.viewer);
+    SerialSender sender(s.canvas, &receiver);
 
 
-    // all the signals connecting the send window and the receive window
-    // also have to be part of main
-    QObject::connect(s.canvas,&Canvas::flaggedPointDrawn,
-                     r.viewer,&Viewer::drawFlaggedPoint);
-    // IDEA: have a CommunicationLinker class which takes pointers to
-    // SendWindow and ReceiveWindow, and then links together the
-    // signals and slots of Canvas and Viewer
-
-    QObject::connect(s.canvas,&Canvas::screenCleared,
-                     r.viewer,&Viewer::drawClearedScreen);
     s.show();
     r.show();
 

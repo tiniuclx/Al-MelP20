@@ -1,14 +1,19 @@
 #include "serialreceiver.h"
 #include <QDebug>
+#include <QObject>
 #include <math.h>
 
 const int COORDINATE_BITS = 16;
 
-serialReceiver::serialReceiver()
+SerialReceiver::SerialReceiver(Viewer *viewer)
 {
+    QObject::connect(this,&SerialReceiver::flaggedPointDrawn,
+                     viewer,&Viewer::drawFlaggedPoint);
+    QObject::connect(this,&SerialReceiver::screenCleared,
+                     viewer,&Viewer::drawClearedScreen);
 }
 
-void serialReceiver::decoder(std::vector<bool> message){
+void SerialReceiver::decoder(std::vector<bool> message){
     bool connected;
     int x=0;
     int y=0;
@@ -23,9 +28,13 @@ void serialReceiver::decoder(std::vector<bool> message){
                 y=y+(((int)message[i+18])*(pow(2,i)));
             }
             qDebug()<<x<<y<<connected;
+            FlaggedQPoint p(x,y);
+            p.isConnected = connected;
+            flaggedPointDrawn(p);
         }
         else if (message[0]==false){
             qDebug()<<"Received: clear screen";
+            screenCleared();
         }
     } else {
         qDebug()<<"Unexpected message of size:"<<message.size();

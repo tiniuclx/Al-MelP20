@@ -8,24 +8,21 @@
 #include <vector>
 
 
-class serialsender : public QObject
+class SerialSender : public QObject
 {
 
 Q_OBJECT
 
 public:
-    serialsender(Canvas *targetCanvas, serialReceiver *targetSerialReceiver);
+    SerialSender(Canvas *targetCanvas, SerialReceiver *targetSerialReceiver);
     Canvas *canvas;
-    serialReceiver *receiver;
+    SerialReceiver *receiver;
     void sendMessage(std::vector<bool> message);
 
 protected:
     std::vector<bool> serialization(bool instruction, bool connected, std::vector<bool> x, std::vector<bool>y);
     std::vector<bool> decToBin(int decimal);
-private:
-
-
-public slots:
+public:
     void saveFlaggedPoint(FlaggedQPoint p);
     void clearScreen();
 };
