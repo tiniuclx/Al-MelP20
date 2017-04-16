@@ -13,5 +13,9 @@ The home of pair D6's version of the P20 project.
 - Basic point and line drawing functionality. ✔️
 - Clear functionality ✔️
 - Easily extendable user interface ✔️
-#### 3.2 Serialize and deserialize drawing-commands, and onwards - Started ❌
+#### 3.2 Serialize and deserialize drawing-commands, and onwards - DONE ✔️
 - Basic structure of serialization classes ✔️
+- Serialisation of commands ✔️
+- Communication between Canvas and SerialSender ✔️
+- Communication between Canvas and SerialReceiver ✔️
+#### 3.3 Implement send- and receive-threads - Not Started ❌
