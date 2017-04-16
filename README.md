@@ -1,10 +1,10 @@
 # Al-MelP20
 The home of pair D6's version of the P20 project.
 ### Short-term TODO:
-- Finish 3.2
-### Medium-term TODO:
 - 3.3: Implement thread-safe queue
 - 3.3: Integrate it with the serialization classes
+### Medium-term TODO:
+- Start 3.4
 ### Long-term TODO:
 - The rest of the bloody thing
 ### What we have so far:
