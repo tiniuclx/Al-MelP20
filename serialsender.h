@@ -21,7 +21,7 @@ public:
 
 protected:
     std::vector<bool> serialization(bool instruction, bool connected, std::vector<bool> x, std::vector<bool>y);
-    std::vector<bool>decToBin(int decimal);
+    std::vector<bool> decToBin(int decimal);
 private:
 
 

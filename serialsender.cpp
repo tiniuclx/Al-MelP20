@@ -3,7 +3,7 @@
 #include <vector>
 #include <math.h>
 
-#define COORDINATE_BITS 16
+const int COORDINATE_BITS = 16;
 
 
 serialsender::serialsender(Canvas *targetCanvas, serialReceiver *targetSerialReceiver)
@@ -17,7 +17,8 @@ serialsender::serialsender(Canvas *targetCanvas, serialReceiver *targetSerialRec
 
 // Receive a drawn point, store it in memory
 void serialsender::saveFlaggedPoint(FlaggedQPoint p){
-
+    qDebug()<<"Sending point:";
+    // initialises the vectors with COORDINATE_BITS zeroes
     std::vector<bool>vectx;
     std::vector<bool>vecty;
     std::vector<bool>drawInformation;
@@ -36,12 +37,10 @@ void serialsender::saveFlaggedPoint(FlaggedQPoint p){
     //When first argument is 1 the instruction is draw
     drawInformation=serialization(1,p.isConnected,vectx,vecty);
     sendMessage(drawInformation);
-
 }
 
+// first bit is LSB => stored LSB:MSB
 std::vector<bool>serialsender::decToBin(int decimal){
-//converts decimal number into a binary number of size COORDINATE_BITS
-
     std::vector<bool>binary;
 
     while(decimal!=0){
@@ -53,15 +52,16 @@ std::vector<bool>serialsender::decToBin(int decimal){
     //adds zeros to binary number to make sure it is the required length
     for(uint i=binary.size();i<COORDINATE_BITS;i++){
         binary.push_back(0);
-    }return binary;
+    }
+    return binary;
 }
 
 void serialsender::clearScreen(){
-     //qDebug()<<"Cleared";
+     qDebug()<<"Sending: Clear Screen!";
 
     std::vector<bool>clearInformation;
-    std::vector<bool>dummyX;
-    std::vector<bool>dummyY;
+    std::vector<bool>dummyX(COORDINATE_BITS,0);
+    std::vector<bool>dummyY(COORDINATE_BITS,0);
 
     //Sends the information for screen to be cleared
     //When first argument is 0 the instruction is clear
@@ -71,41 +71,22 @@ void serialsender::clearScreen(){
 }
 
 std::vector<bool> serialsender::serialization(bool instruction, bool connected, std::vector<bool> x, std::vector<bool>y){
-
     std::vector<bool> information;
     //final structure of information vector:
     //information[0]=instruction
     //instruction=0 to clear, instruction=1 to draw
     //information[1]=isConnected
-    //information[2:17]=binary x coordinate
-    //information[18:33]=binary y coordinate
-
-
-
+    //information[2:17] =binary x coordinate, LSB:MSB
+    //information[18:33]=binary y coordinate, LSB:MSB
 
     //puts binary version of coordinates
     //in information vector
     //starting from most significant bit
-    for(int i=0; i<COORDINATE_BITS; i++){
-    information.push_back(y[i]);
-    }
-
-    for(int i=0; i<COORDINATE_BITS; i++){
-    information.push_back(x[i]);
-    }
-
-    //used to make sure the coordinates are
-    //being converted to binary correctly
-    int testx;
-    for(int i=0; i<COORDINATE_BITS; i++){
-        testx=testx+(((int)x[i])*(pow(2,i)));
-    }
-    //qDebug()<<testx;
-
-
-    information.push_back(connected);
     information.push_back(instruction);
+    information.push_back(connected);
 
+    information.insert(information.end(),x.begin(),x.end());
+    information.insert(information.end(),y.begin(),y.end());
     return information;
 }
 
