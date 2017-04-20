@@ -5,9 +5,13 @@
 #include <pthread.h>
 #include <wiringPi.h>
 
+#include <vector>
+#include <queue>
+
 #include "sendwindow.h"
 #include "receivewindow.h"
 #include "serialsender.h"
+
 
 void* worker(void* thread_id)
 {
@@ -32,9 +36,10 @@ int main(int argc, char *argv[])
     SendWindow s;
     ReceiveWindow r;
 
+    std::queue<std::vector<bool> > msg_queue;
+
     SerialReceiver receiver(r.viewer);
     SerialSender sender(s.canvas, &receiver);
-
 
     s.show();
     r.show();
