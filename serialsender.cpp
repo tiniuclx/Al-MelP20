@@ -17,7 +17,7 @@ SerialSender::SerialSender(Canvas *targetCanvas, SerialReceiver *targetSerialRec
 
 // Receive a drawn point, store it in memory
 void SerialSender::saveFlaggedPoint(FlaggedQPoint p){
-    qDebug()<<"Sending point:";
+    // qDebug()<<"Sending point:";
     // initialises the vectors with COORDINATE_BITS zeroes
     std::vector<bool>vectx;
     std::vector<bool>vecty;
@@ -26,7 +26,7 @@ void SerialSender::saveFlaggedPoint(FlaggedQPoint p){
     //prints x coordinate, y coordinate and whether
     //the point is connected to the previous point
     //for each flaggedqpoint sent with the signal
-    qDebug() << p.x() << p.y() << p.isConnected;
+    // qDebug() << p.x() << p.y() << p.isConnected;
 
     //converts the x and y coordinates into binary
     //and stores them in vectors

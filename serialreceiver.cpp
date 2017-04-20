@@ -20,20 +20,20 @@ void SerialReceiver::decoder(std::vector<bool> message){
     unsigned int expectedSize = 22;
     if (message.size()==expectedSize){
         if (message[0]==true){
-            qDebug()<<"Received: Drawing a point!";
+            // qDebug()<<"Received: Drawing a point!";
             connected=message[1];
             //convert binary coordinate x into decimal
             for(int i=0; i<COORDINATE_BITS; i++){
                 x=x+(((int)message[i+2] )*(pow(2,i)));
                 y=y+(((int)message[i+2+COORDINATE_BITS])*(pow(2,i)));
             }
-            qDebug()<<x<<y<<connected;
+            // qDebug()<<x<<y<<connected;
             FlaggedQPoint p(x,y);
             p.isConnected = connected;
             flaggedPointDrawn(p);
         }
         else if (message[0]==false){
-            qDebug()<<"Received: clear screen";
+            // qDebug()<<"Received: clear screen";
             screenCleared();
         }
     } else {
