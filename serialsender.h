@@ -15,16 +15,15 @@ Q_OBJECT
 
 public:
     SerialSender(Canvas *targetCanvas, SerialReceiver *targetSerialReceiver);
-    Canvas *canvas;
-    SerialReceiver *receiver;
     void sendMessage(std::vector<bool> message);
+    void saveFlaggedPoint(FlaggedQPoint p);
+    void clearScreen();
+    std::vector<bool> decToBin(int decimal);
 
 protected:
     std::vector<bool> serialization(bool instruction, bool connected, std::vector<bool> x, std::vector<bool>y);
-    std::vector<bool> decToBin(int decimal);
-public:
-    void saveFlaggedPoint(FlaggedQPoint p);
-    void clearScreen();
+    Canvas *canvas;
+    SerialReceiver *receiver;
 };
 
 #endif // SERIALSENDER_H
