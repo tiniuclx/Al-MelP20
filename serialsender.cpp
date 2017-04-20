@@ -3,7 +3,7 @@
 #include <vector>
 #include <math.h>
 
-const int COORDINATE_BITS = 16;
+const int COORDINATE_BITS = 10;
 
 
 SerialSender::SerialSender(Canvas *targetCanvas, SerialReceiver *targetSerialReceiver)

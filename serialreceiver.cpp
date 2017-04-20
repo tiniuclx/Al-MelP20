@@ -3,7 +3,7 @@
 #include <QObject>
 #include <math.h>
 
-const int COORDINATE_BITS = 16;
+const int COORDINATE_BITS = 10;
 
 SerialReceiver::SerialReceiver(Viewer *viewer)
 {
@@ -17,7 +17,7 @@ void SerialReceiver::decoder(std::vector<bool> message){
     bool connected;
     int x=0;
     int y=0;
-    unsigned int expectedSize = 34;
+    unsigned int expectedSize = 22;
     if (message.size()==expectedSize){
         if (message[0]==true){
             qDebug()<<"Received: Drawing a point!";
@@ -25,7 +25,7 @@ void SerialReceiver::decoder(std::vector<bool> message){
             //convert binary coordinate x into decimal
             for(int i=0; i<COORDINATE_BITS; i++){
                 x=x+(((int)message[i+2] )*(pow(2,i)));
-                y=y+(((int)message[i+18])*(pow(2,i)));
+                y=y+(((int)message[i+2+COORDINATE_BITS])*(pow(2,i)));
             }
             qDebug()<<x<<y<<connected;
             FlaggedQPoint p(x,y);
