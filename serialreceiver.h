@@ -11,7 +11,6 @@ class SerialReceiver : public QObject
     Q_OBJECT
 public:
     void decoder(std::vector<bool> message);
-protected:
     SerialReceiver(Viewer *viewer);
 signals:
     void flaggedPointDrawn(FlaggedQPoint p);
