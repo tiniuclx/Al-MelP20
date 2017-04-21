@@ -11,13 +11,24 @@
 #include "sendwindow.h"
 #include "receivewindow.h"
 #include "serialsender.h"
+#include "threadsafequeue.h"
 
 
-void* worker(void* thread_id)
+void* sendThread(void* thread_id)
 {
     long tid = (long)thread_id;
     // do something....
-    qDebug() << "Worker thread " << tid << "started.";
+    qDebug() << "Send thread " << tid << "started.";
+
+    // end thread
+    pthread_exit(NULL);
+}
+
+void* receiveThread(void* thread_id)
+{
+    long tid = (long)thread_id;
+    // do something....
+    qDebug() << "Receive thread " << tid << "started.";
 
     // end thread
     pthread_exit(NULL);
@@ -36,8 +47,6 @@ int main(int argc, char *argv[])
     SendWindow s;
     ReceiveWindow r;
 
-    std::queue<std::vector<bool> > msg_queue;
-
     SerialReceiver receiver(r.viewer);
     SerialSender sender(s.canvas, &receiver);
 
@@ -46,12 +55,32 @@ int main(int argc, char *argv[])
 
     // starting worker thread(s)
     int rc;
-    pthread_t worker_thread;
-    rc = pthread_create(&worker_thread, NULL, worker, (void*)1);
+    pthread_t send_thread, receive_thread;
+    rc = pthread_create(&send_thread, NULL, sendThread, (void*)1);
     if (rc) {
-        qDebug() << "Unable to start worker thread.";
+        qDebug() << "Unable to start send thread.";
         exit(1);
     }
+
+    rc = pthread_create(&receive_thread, NULL, receiveThread, (void*)1);
+    if (rc) {
+        qDebug() << "Unable to start receive thread.";
+        exit(1);
+    }
+    // Test code for ThreadSafeQueue.
+    // Expected debug output:
+    // Push successful!
+    // Size of queue after pop: 0
+    ThreadSafeQueue queue;
+    std::vector<bool> vector;
+    vector.push_back(true);
+    vector.push_back(false);
+    vector.push_back(true);
+    queue.push(vector);
+    if(queue.front()==vector)
+        qDebug() << "Push successful!";
+    queue.pop();
+    qDebug()<<"Size of queue after pop:"<<queue.size();
 
     // start window event loop
     qDebug() << "Starting event loop...";

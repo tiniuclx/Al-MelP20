@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     canvas.cpp \
     viewer.cpp \
     serialreceiver.cpp \
-    serialsender.cpp
+    serialsender.cpp \
+    threadsafequeue.cpp
 
 HEADERS  += \
     sendwindow.h \
@@ -27,7 +28,8 @@ HEADERS  += \
     viewer.h \
     flaggedqpoint.h \
     serialreceiver.h \
-    serialsender.h
+    serialsender.h \
+    threadsafequeue.h
 
 FORMS    +=
 
