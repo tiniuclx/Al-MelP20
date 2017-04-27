@@ -1,8 +1,7 @@
 # Al-MelP20
 The home of pair D6's version of the P20 project.
 ### Short-term TODO:
-- 3.3: Implement thread-safe queue
-- 3.3: Integrate it with the serialization classes
+- 3.3: Integrate threading with the serialization classes
 ### Medium-term TODO:
 - Start 3.4
 ### Long-term TODO:
@@ -18,4 +17,7 @@ The home of pair D6's version of the P20 project.
 - Serialisation of commands ✔️
 - Communication between Canvas and SerialSender ✔️
 - Communication between Canvas and SerialReceiver ✔️
-#### 3.3 Implement send- and receive-threads - Not Started ❌
+#### 3.3 Implement send- and receive-threads - Started ❌
+- Thread-safe queue ✔️
+- Basic threading control flow ✔️
+- Threaded comms between SerialSender an SerialReceiver ❌
