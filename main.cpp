@@ -13,24 +13,55 @@
 #include "serialsender.h"
 #include "threadsafequeue.h"
 
+struct thread_data{
+    ThreadSafeQueue receive_queue;
+    ThreadSafeQueue send_queue;
+};
 
-void* sendThread(void* thread_id)
+void printBool(const std::vector<bool> array){
+    QDebug deb = qDebug();
+    for(uint i=0;i<array.size();i++)
+        qDebug()<<array[i];
+
+}
+
+
+void* sendThread(void* information)
 {
-    long tid = (long)thread_id;
-    // do something....
-    qDebug() << "Send thread " << tid << "started.";
+    thread_data *data = (thread_data*) information;
 
+    while(1){
+        if(data->send_queue.size() != 0){
+            std::vector<bool> bitfield = data->send_queue.front();
+            qDebug()<<"Popped from send_queue by sendThread:";
+            printBool(bitfield);
+            data->send_queue.pop();
+            data->receive_queue.push(bitfield);
+        }
+    }
     // end thread
     pthread_exit(NULL);
 }
 
-void* receiveThread(void* thread_id)
+void* receiveThread(void* information)
 {
-    long tid = (long)thread_id;
-    // do something....
-    qDebug() << "Receive thread " << tid << "started.";
+    thread_data *data = (thread_data*) information;
 
-    // end thread
+    while(1){
+        uint size = data->receive_queue.size();
+        if(size!=0){
+            if (size>100)
+                ;
+                //qDebug()<<data->receive_queue.size();
+            else{
+                std::vector<bool> bitfield;
+                bitfield = data->receive_queue.front();
+                qDebug()<<"Popped from receive_queue by receiveThread:";
+                printBool(bitfield);
+                data->receive_queue.pop();
+            }
+        }
+    }
     pthread_exit(NULL);
 }
 
@@ -53,20 +84,37 @@ int main(int argc, char *argv[])
     s.show();
     r.show();
 
+    thread_data data;
+
+    std::vector<bool> stuff;
+    stuff.push_back(1);
+    stuff.push_back(0);
+    stuff.push_back(1);
+    stuff.push_back(1);
+    qDebug()<<"Pushing stuff in main:";
+    printBool(stuff);
+    data.send_queue.push(stuff);
+
+    stuff.push_back(0);
+    qDebug()<<"Pushing stuff in main:";
+    printBool(stuff);
+    data.send_queue.push(stuff);
+
     // starting worker thread(s)
     int rc;
     pthread_t send_thread, receive_thread;
-    rc = pthread_create(&send_thread, NULL, sendThread, (void*)1);
+    rc = pthread_create(&send_thread, NULL, sendThread, (void*)&data);
     if (rc) {
         qDebug() << "Unable to start send thread.";
         exit(1);
     }
 
-    rc = pthread_create(&receive_thread, NULL, receiveThread, (void*)1);
+    rc = pthread_create(&receive_thread, NULL, receiveThread, (void*) &data.receive_queue);
     if (rc) {
         qDebug() << "Unable to start receive thread.";
         exit(1);
     }
+
 
     // start window event loop
     qDebug() << "Starting event loop...";
