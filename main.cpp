@@ -67,20 +67,6 @@ int main(int argc, char *argv[])
         qDebug() << "Unable to start receive thread.";
         exit(1);
     }
-    // Test code for ThreadSafeQueue.
-    // Expected debug output:
-    // Push successful!
-    // Size of queue after pop: 0
-    ThreadSafeQueue queue;
-    std::vector<bool> vector;
-    vector.push_back(true);
-    vector.push_back(false);
-    vector.push_back(true);
-    queue.push(vector);
-    if(queue.front()==vector)
-        qDebug() << "Push successful!";
-    queue.pop();
-    qDebug()<<"Size of queue after pop:"<<queue.size();
 
     // start window event loop
     qDebug() << "Starting event loop...";
