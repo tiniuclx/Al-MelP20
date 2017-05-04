@@ -6,12 +6,14 @@
 const int COORDINATE_BITS = 10;
 
 
-SerialSender::SerialSender(Canvas *targetCanvas, SerialReceiver *targetSerialReceiver)
+SerialSender::SerialSender(Canvas *targetCanvas, SerialReceiver *targetSerialReceiver, ThreadSafeQueue *targetQueue)
 {
     receiver=targetSerialReceiver;
     canvas=targetCanvas;
     connect(canvas,&Canvas::flaggedPointDrawn,this,&SerialSender::saveFlaggedPoint);
     connect(canvas,&Canvas::screenCleared,this,&SerialSender::clearScreen);
+
+    send_queue = targetQueue;
 }
 
 
@@ -91,5 +93,5 @@ std::vector<bool> SerialSender::serialization(bool instruction, bool connected, 
 }
 
 void SerialSender::sendMessage(std::vector<bool> message){
-    receiver->decoder(message);
+    send_queue->push(message);
 }

@@ -2,7 +2,7 @@
 
 void errorCheck(int error){
     if(error!=0){
-        qDebug()<<"Mutex failed!";
+        //qDebug()<<"Mutex failed!";
     }
 }
 

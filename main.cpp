@@ -11,11 +11,14 @@
 #include "sendwindow.h"
 #include "receivewindow.h"
 #include "serialsender.h"
+#include "serialreceiver.h"
 #include "threadsafequeue.h"
+#include "flaggedqpoint.h"
 
 struct thread_data{
     ThreadSafeQueue *receive_queue;
     ThreadSafeQueue *send_queue;
+    SerialReceiver *receiver;
 };
 
 void printBool(const std::vector<bool> array){
@@ -51,6 +54,7 @@ void* receiveThread(void* information)
             std::vector<bool> bitfield;
             bitfield = data->receive_queue->front();
             data->receive_queue->pop();
+            data->receiver->decoder(bitfield);
         }
     }
     pthread_exit(NULL);
@@ -65,12 +69,10 @@ int main(int argc, char *argv[])
 
     // setup Qt GUI
     QApplication a(argc, argv);
-    // the two windows are initialised in the main loop
+    qRegisterMetaType<FlaggedQPoint>();
+    // the two windows are initialised in the main loop    
     SendWindow s;
     ReceiveWindow r;
-
-    SerialReceiver receiver(r.viewer);
-    SerialSender sender(s.canvas, &receiver);
 
     s.show();
     r.show();
@@ -78,8 +80,13 @@ int main(int argc, char *argv[])
     thread_data data;
     ThreadSafeQueue receive_queue;
     ThreadSafeQueue send_queue;
+
+    SerialReceiver receiver(r.viewer);
+    SerialSender sender(s.canvas, &receiver,&send_queue);
+
     data.receive_queue = &receive_queue;
     data.send_queue = &send_queue;
+    data.receiver = &receiver;
 
     // starting worker thread(s)
     int rc;

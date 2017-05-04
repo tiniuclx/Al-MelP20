@@ -1,6 +1,7 @@
 #ifndef FLAGGEDQPOINT_H
 #define FLAGGEDQPOINT_H
 #include <QPoint>
+#include <QMetaType>
 
 class FlaggedQPoint : public QPoint
 {
@@ -15,5 +16,7 @@ public:
         setY(y);
     }
 };
+
+Q_DECLARE_METATYPE(FlaggedQPoint)
 
 #endif // FLAGGEDQPOINT_H
