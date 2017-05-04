@@ -14,8 +14,8 @@
 #include "threadsafequeue.h"
 
 struct thread_data{
-    ThreadSafeQueue receive_queue;
-    ThreadSafeQueue send_queue;
+    ThreadSafeQueue *receive_queue;
+    ThreadSafeQueue *send_queue;
 };
 
 void printBool(const std::vector<bool> array){
@@ -31,12 +31,12 @@ void* sendThread(void* information)
     thread_data *data = (thread_data*) information;
 
     while(1){
-        if(data->send_queue.size() != 0){
-            std::vector<bool> bitfield = data->send_queue.front();
+        if(data->send_queue->size() != 0){
+            std::vector<bool> bitfield = data->send_queue->front();
             qDebug()<<"Popped from send_queue by sendThread:";
             printBool(bitfield);
-            data->send_queue.pop();
-            data->receive_queue.push(bitfield);
+            data->send_queue->pop();
+            data->receive_queue->push(bitfield);
         }
     }
     // end thread
@@ -48,18 +48,13 @@ void* receiveThread(void* information)
     thread_data *data = (thread_data*) information;
 
     while(1){
-        uint size = data->receive_queue.size();
-        if(size!=0){
-            if (size>100)
-                ;
-                //qDebug()<<data->receive_queue.size();
-            else{
-                std::vector<bool> bitfield;
-                bitfield = data->receive_queue.front();
-                qDebug()<<"Popped from receive_queue by receiveThread:";
-                printBool(bitfield);
-                data->receive_queue.pop();
-            }
+        uint size = data->receive_queue->size();
+        if(size!=0){            
+            std::vector<bool> bitfield;
+            bitfield = data->receive_queue->front();
+            qDebug()<<"Popped from receive_queue by receiveThread:";
+            printBool(bitfield);
+            data->receive_queue->pop();
         }
     }
     pthread_exit(NULL);
@@ -85,6 +80,10 @@ int main(int argc, char *argv[])
     r.show();
 
     thread_data data;
+    ThreadSafeQueue receive_queue;
+    ThreadSafeQueue send_queue;
+    data.receive_queue = &receive_queue;
+    data.send_queue = &send_queue;
 
     std::vector<bool> stuff;
     stuff.push_back(1);
@@ -93,12 +92,12 @@ int main(int argc, char *argv[])
     stuff.push_back(1);
     qDebug()<<"Pushing stuff in main:";
     printBool(stuff);
-    data.send_queue.push(stuff);
+    data.send_queue->push(stuff);
 
     stuff.push_back(0);
     qDebug()<<"Pushing stuff in main:";
     printBool(stuff);
-    data.send_queue.push(stuff);
+    data.send_queue->push(stuff);
 
     // starting worker thread(s)
     int rc;
