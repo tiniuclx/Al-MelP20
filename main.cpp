@@ -15,19 +15,33 @@
 #include "threadsafequeue.h"
 #include "flaggedqpoint.h"
 
+struct SerialPins{
+    int data;
+    int isSending;
+    int hasRead;
+};
+
 struct thread_data{
-    ThreadSafeQueue *receive_queue;
     ThreadSafeQueue *send_queue;
     SerialReceiver *receiver;
+    SerialPins *serial_pins;
 };
+
+
+
+int readPin(const int &pin){
+    return pin;
+}
+
+void writePin(int &pin, int value){
+    pin = value;
+}
 
 void printBool(const std::vector<bool> array){
     QDebug deb = qDebug();
     for(uint i=0;i<array.size();i++)
-        qDebug()<<array[i];
-
+        deb<<(int) array[i];
 }
-
 
 void* sendThread(void* information)
 {
@@ -37,7 +51,15 @@ void* sendThread(void* information)
         if(data->send_queue->size() != 0){
             std::vector<bool> bitfield = data->send_queue->front();
             data->send_queue->pop();
-            data->receive_queue->push(bitfield);
+            for(int i = 0; i<bitfield.size(); i++){
+                writePin(data->serial_pins->data, bitfield[i]);
+                writePin(data->serial_pins->isSending, TRUE);
+                while(!readPin(data->serial_pins->hasRead))
+                    ;
+                writePin(data->serial_pins->isSending, FALSE);
+                while(readPin(data->serial_pins->hasRead))
+                    ;
+            }
         }
     }
     // end thread
@@ -46,16 +68,24 @@ void* sendThread(void* information)
 
 void* receiveThread(void* information)
 {
-    thread_data *data = (thread_data*) information;
+    thread_data *data = (thread_data*) information;    
+    std::vector<bool> bitfield;
 
     while(1){
-        uint size = data->receive_queue->size();
-        if(size!=0){            
-            std::vector<bool> bitfield;
-            bitfield = data->receive_queue->front();
-            data->receive_queue->pop();
+        while(readPin(data->serial_pins->isSending))
+            ;
+        writePin(data->serial_pins->hasRead, FALSE);
+
+        while(!readPin(data->serial_pins->isSending))
+            ;
+        bitfield.push_back(readPin(data->serial_pins->data));
+        // If the message has the right size
+        if(bitfield.size() == 22){
+            // Tells Viewer to draw the point, serialised as bitfield.
             data->receiver->decoder(bitfield);
+            bitfield.clear();
         }
+        writePin(data->serial_pins->hasRead, TRUE);
     }
     pthread_exit(NULL);
 }
@@ -78,15 +108,20 @@ int main(int argc, char *argv[])
     r.show();
 
     thread_data data;
-    ThreadSafeQueue receive_queue;
     ThreadSafeQueue send_queue;
 
     SerialReceiver receiver(r.viewer);
     SerialSender sender(s.canvas, &receiver,&send_queue);
 
-    data.receive_queue = &receive_queue;
     data.send_queue = &send_queue;
     data.receiver = &receiver;
+
+    SerialPins serial_pins;
+    serial_pins.data = 0;
+    serial_pins.hasRead = 0;
+    serial_pins.isSending = 0;
+
+    data.serial_pins = &serial_pins;
 
     // starting worker thread(s)
     int rc;
@@ -97,7 +132,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    rc = pthread_create(&receive_thread, NULL, receiveThread, (void*) &data.receive_queue);
+    rc = pthread_create(&receive_thread, NULL, receiveThread, (void*) &data);
     if (rc) {
         qDebug() << "Unable to start receive thread.";
         exit(1);
