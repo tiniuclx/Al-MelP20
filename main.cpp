@@ -33,8 +33,6 @@ void* sendThread(void* information)
     while(1){
         if(data->send_queue->size() != 0){
             std::vector<bool> bitfield = data->send_queue->front();
-            qDebug()<<"Popped from send_queue by sendThread:";
-            printBool(bitfield);
             data->send_queue->pop();
             data->receive_queue->push(bitfield);
         }
@@ -52,8 +50,6 @@ void* receiveThread(void* information)
         if(size!=0){            
             std::vector<bool> bitfield;
             bitfield = data->receive_queue->front();
-            qDebug()<<"Popped from receive_queue by receiveThread:";
-            printBool(bitfield);
             data->receive_queue->pop();
         }
     }
@@ -84,20 +80,6 @@ int main(int argc, char *argv[])
     ThreadSafeQueue send_queue;
     data.receive_queue = &receive_queue;
     data.send_queue = &send_queue;
-
-    std::vector<bool> stuff;
-    stuff.push_back(1);
-    stuff.push_back(0);
-    stuff.push_back(1);
-    stuff.push_back(1);
-    qDebug()<<"Pushing stuff in main:";
-    printBool(stuff);
-    data.send_queue->push(stuff);
-
-    stuff.push_back(0);
-    qDebug()<<"Pushing stuff in main:";
-    printBool(stuff);
-    data.send_queue->push(stuff);
 
     // starting worker thread(s)
     int rc;
