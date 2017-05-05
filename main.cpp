@@ -29,12 +29,12 @@ struct thread_data{
 // Stub to implement simulated serial.
 // Makes it easy to use physical pins: simply modify this function
 int readPin(const int &pin){
-    return pin;
+    return digitalRead(pin);
 }
 // Stub to implement simulated serial.
 // Makes it easy to use physical pins: simply modify this function
-void writePin(int &pin, int value){
-    pin = value;
+void writePin(const int &pin, const int value){
+    digitalWrite(pin, value);
 }
 // For debugging purposes: prints out the values of a vector<bool>
 // to qDebug()
@@ -96,8 +96,7 @@ int main(int argc, char *argv[])
 {
     // setup GPIO interface - uncomment when needed
     // needs to run with root via sudo in terminal.
-    //wiringPiSetup();
-    //pinMode (0, OUTPUT);
+    wiringPiSetup();
 
     // setup Qt GUI
     QApplication a(argc, argv);
@@ -108,31 +107,50 @@ int main(int argc, char *argv[])
     s.show();
     r.show();
     // Data shared between threads
-    thread_data data;
+    thread_data send_data;
+    thread_data receive_data;
     ThreadSafeQueue send_queue;
     // Serialization classes
     SerialReceiver receiver(r.viewer);
     SerialSender sender(s.canvas, &receiver,&send_queue);
     // Sets up thread data
-    data.send_queue = &send_queue;
-    data.receiver = &receiver;
-    // Simulated pins: initially start LOW to prevent
-    // initialisation errors
-    SerialPins serial_pins;
-    serial_pins.data = 0;
-    serial_pins.hasRead = 0;
-    serial_pins.isSending = 0;
-    data.serial_pins = &serial_pins;
+    send_data.send_queue = &send_queue;
+    send_data.receiver = &receiver;
+
+    // Pins used for sending data to the remote
+    // Physical pins 8, 10, 12
+    SerialPins send_serial_pins;
+    send_serial_pins.data = 15;
+    send_serial_pins.isSending = 16;
+    send_serial_pins.hasRead = 1;
+    pinMode(send_serial_pins.data, OUTPUT);
+    pinMode(send_serial_pins.isSending, OUTPUT);
+    pinMode(send_serial_pins.hasRead, INPUT);
+    send_data.serial_pins = &send_serial_pins;
+
+    // Pins used for receiving data from the remote
+    // Physical pins 22, 24, 26
+    // Can switch the data and isSending pins around, to connect
+    // two Pis more easily
+    receive_data = send_data;
+    SerialPins receive_serial_pins;
+    receive_serial_pins.data = 6;
+    receive_serial_pins.isSending = 10;
+    receive_serial_pins.hasRead = 11;
+    pinMode(receive_serial_pins.data, INPUT);
+    pinMode(receive_serial_pins.isSending, INPUT);
+    pinMode(receive_serial_pins.hasRead, OUTPUT);
+    receive_data.serial_pins = &receive_serial_pins;
 
     // starting worker thread(s)
     int rc;
     pthread_t send_thread, receive_thread;
-    rc = pthread_create(&send_thread, NULL, sendThread, (void*)&data);
+    rc = pthread_create(&send_thread, NULL, sendThread, (void*)&send_data);
     if (rc) {
         qDebug() << "Unable to start send thread.";
         exit(1);
     }
-    rc = pthread_create(&receive_thread, NULL, receiveThread, (void*) &data);
+    rc = pthread_create(&receive_thread, NULL, receiveThread, (void*) &receive_data);
     if (rc) {
         qDebug() << "Unable to start receive thread.";
         exit(1);
