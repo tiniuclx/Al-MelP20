@@ -19,6 +19,7 @@ public:
     void sendMessage(std::vector<bool> message);
     void saveFlaggedPoint(FlaggedQPoint p);
     void clearScreen();
+    static int messageSize();
     std::vector<bool> decToBin(int decimal);
 
 protected:

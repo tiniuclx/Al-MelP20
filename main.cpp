@@ -82,8 +82,7 @@ void* receiveThread(void* information) {
             ;
         bitfield.push_back(readPin(data->serial_pins->data));
         // If the message has the right size
-        // Magic number! Consider removing.
-        if(bitfield.size() == 22){
+        if(bitfield.size() == SerialSender::messageSize() ){
             // Tells Viewer to draw the point, serialised as bitfield.
             data->receiver->decoder(bitfield);
             bitfield.clear();

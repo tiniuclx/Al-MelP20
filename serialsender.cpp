@@ -78,8 +78,8 @@ std::vector<bool> SerialSender::serialization(bool instruction, bool connected, 
     //information[0]=instruction
     //instruction=0 to clear, instruction=1 to draw
     //information[1]=isConnected
-    //information[2:17] =binary x coordinate, LSB:MSB
-    //information[18:33]=binary y coordinate, LSB:MSB
+    //information[2:11] =binary x coordinate, LSB:MSB
+    //information[12:21]=binary y coordinate, LSB:MSB
 
     //puts binary version of coordinates
     //in information vector
@@ -94,4 +94,10 @@ std::vector<bool> SerialSender::serialization(bool instruction, bool connected, 
 
 void SerialSender::sendMessage(std::vector<bool> message){
     send_queue->push(message);
+}
+
+int SerialSender::messageSize(){
+    // Command bit (draw or clear), isConnected flag,
+    // X and Y coordinate.
+    return (2 + COORDINATE_BITS * 2);
 }
