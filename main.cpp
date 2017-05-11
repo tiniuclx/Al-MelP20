@@ -126,6 +126,7 @@ int main(int argc, char *argv[])
     pinMode(send_serial_pins.data, OUTPUT);
     pinMode(send_serial_pins.isSending, OUTPUT);
     pinMode(send_serial_pins.hasRead, INPUT);
+    pullUpDnControl(send_serial_pins.hasRead, PUD_DOWN);
     send_data.serial_pins = &send_serial_pins;
 
     // Pins used for receiving data from the remote
@@ -138,7 +139,9 @@ int main(int argc, char *argv[])
     receive_serial_pins.isSending = 10;
     receive_serial_pins.hasRead = 11;
     pinMode(receive_serial_pins.data, INPUT);
+    pullUpDnControl(receive_serial_pins.data, PUD_DOWN);
     pinMode(receive_serial_pins.isSending, INPUT);
+    pullUpDnControl(receive_serial_pins.isSending, PUD_DOWN);
     pinMode(receive_serial_pins.hasRead, OUTPUT);
     receive_data.serial_pins = &receive_serial_pins;
 
